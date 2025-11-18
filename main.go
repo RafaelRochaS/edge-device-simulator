@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"flag"
 	"log"
-	"sort"
+	"math/rand/v2"
+	"net/http"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,16 +21,21 @@ const (
 	MEC
 )
 
+const BaseSeed = 5880214
+const DeviceId = 1
+
 type Config struct {
-	Scenario    Scenario
-	Callback    string
-	ArrivalRate float64
-	Iterations  int
+	Scenario       Scenario
+	Callback       string
+	ArrivalRate    float64
+	Duration       time.Duration
+	WorkloadMean   int
+	WorkloadStdVar int
 }
 
 type CallbackData struct {
 	TaskID        string  `json:"taskId"`
-	DeviceID      string  `json:"deviceId"`
+	DeviceID      int     `json:"deviceId"`
 	WorkloadSize  int     `json:"workloadSize"`
 	ExecutionSite string  `json:"executionSite"`
 	CreatedAt     int64   `json:"createdAt"`
@@ -35,8 +43,7 @@ type CallbackData struct {
 }
 
 func main() {
-	id := uuid.New()
-	log.Println("Starting edge device simulator with id:", id)
+	log.Println("Starting edge device simulator with id:", DeviceId)
 
 	config := getConfig()
 	log.Printf("Loaded config: %+v\n", config)
@@ -52,51 +59,94 @@ func main() {
 }
 
 func getConfig() (config Config) {
-	scenarioFlag := flag.Int("scenario", 3, "Scenario to run:\n1 - Local processing\n2 - Cloud processing\n3 - Hybrid edge with xApp")
-	lambdaFlag := flag.Float64("arrival-rate", 0.5, "Arrival rate of workloads in requests per second.")
-	callbackFlag := flag.String("callback", "http://localhost", "Callback URL to send results to.")
-	iterationsFlag := flag.Int("duration", 100, "Total iterations of tasks to send.")
+	scenarioFlag := flag.Int("scenario", 2, "Scenario to run:\n0 - Local processing\n1 - Cloud processing\n2 - Hybrid edge with xApp")
+	lambdaFlag := flag.Float64("arrival-rate", 2, "Arrival rate of workloads in requests per second.")
+	callbackFlag := flag.String("callback", "http://localhost:8080", "Callback URL to send results to.")
+	durationFlag := flag.Duration("duration", time.Minute, "Time in seconds to run the simulation.")
+	loadMeanFlag := flag.Int("workload-mean", 25, "Mean of workload sizes.")
+	loadStdVarFlag := flag.Int("workload-std-var", 3, "Standard deviation of workload sizes.")
 
 	flag.Parse()
 
-	if *scenarioFlag < 1 || *scenarioFlag > 3 {
+	if *scenarioFlag < 0 || *scenarioFlag > 2 {
 		config.Scenario = MEC
 	}
 	config.Scenario = Scenario(*scenarioFlag)
 
 	config.ArrivalRate = *lambdaFlag
 	config.Callback = *callbackFlag
-	config.Iterations = *iterationsFlag
+	config.Duration = *durationFlag
+	config.WorkloadMean = *loadMeanFlag
+	config.WorkloadStdVar = *loadStdVarFlag
 
 	return
 }
 
 func scenarioOne(config Config) {
-	dist := distuv.Poisson{Lambda: config.ArrivalRate}
+	source := rand.NewPCG(uint64(BaseSeed), DeviceId)
 
-	workLoadSizes := make([]int, config.Iterations)
-	durations := make([]time.Duration, config.Iterations)
-
-	for i := 0; i < config.Iterations; i++ {
-		n := int(dist.Rand()*50_000) + 1
-		workLoadSizes[i] = n
-		durations[i] = CpuBoundWork(n)
+	distExpo := distuv.Exponential{
+		Rate: config.ArrivalRate,
+		Src:  source,
+	}
+	distLogNormal := distuv.LogNormal{
+		Mu:    float64(config.WorkloadMean),
+		Sigma: float64(config.WorkloadStdVar),
+		Src:   source,
 	}
 
-	sort.Ints(workLoadSizes)
-	sort.Slice(durations, func(i, j int) bool {
-		return durations[i] < durations[j]
-	})
+	timeout := time.After(config.Duration)
 
-	log.Println("Work load sizes:", workLoadSizes)
-	log.Println("Work load durations:", durations)
+execution:
+	for {
+		select {
+		case <-timeout:
+			break execution
+		default:
+			callbackData := getCallbackData()
+
+			n := int(distLogNormal.Rand())
+			callbackData.WorkloadSize = n
+
+			duration := CpuBoundWork(n)
+			callbackData.Duration = duration.Seconds()
+
+			sendCallback(callbackData, config.Callback)
+
+			sleepTime := distExpo.Rand() * time.Second.Seconds()
+
+			log.Printf("Finished, sleeping for %f seconds...\n", sleepTime)
+			time.Sleep(time.Duration(sleepTime))
+		}
+	}
 }
 
-func getCallbackData(workloadSize int) CallbackData {
+func getCallbackData() CallbackData {
 	return CallbackData{
 		TaskID:        uuid.New().String(),
-		WorkloadSize:  workloadSize,
-		ExecutionSite: "edge",
+		DeviceID:      DeviceId,
+		ExecutionSite: "local",
 		CreatedAt:     time.Now().Unix(),
 	}
+}
+
+func sendCallback(data CallbackData, url string) {
+	log.Printf("Sending callback: %+v\n", data)
+
+	body, err := json.Marshal(data)
+
+	if err != nil {
+		log.Fatal("Failed to parse body: ", err)
+	}
+
+	log.Println("Body:", string(body))
+
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(body))
+
+	if err != nil {
+		log.Fatal("Failed to send callback: ", err)
+	}
+
+	log.Println("Response status:", resp.StatusCode)
+	log.Println("Callback sent successfully.")
 }

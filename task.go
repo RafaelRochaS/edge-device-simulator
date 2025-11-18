@@ -1,19 +1,23 @@
 package main
 
 import (
-	"log"
-	"math"
 	"time"
 )
 
 func CpuBoundWork(n int) time.Duration {
-	log.Println("Running work for value:", n)
-	startTime := time.Now()
+	start := time.Now()
 
-	acc := 0.0
+	x := uint64(0xDEADBEEF)
 	for i := 0; i < n; i++ {
-		acc += math.Sqrt(float64(i)) * math.Sin(float64(i))
+		x ^= uint64(i) * 0x9e3779b97f4a7c15
+		x ^= x >> 33
+		x *= 0xff51afd7ed558ccd
+		x ^= x >> 33
+		x *= 0xc4ceb9fe1a85ec53
+		x ^= x >> 33
 	}
 
-	return time.Since(startTime)
+	_ = x
+
+	return time.Since(start)
 }
