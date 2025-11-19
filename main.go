@@ -7,6 +7,8 @@ import (
 	"log"
 	"math/rand/v2"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -21,9 +23,6 @@ const (
 	MEC
 )
 
-const BaseSeed = 5880214
-const DeviceId = 1
-
 type Config struct {
 	Scenario       Scenario
 	Callback       string
@@ -31,6 +30,8 @@ type Config struct {
 	Duration       time.Duration
 	WorkloadMean   int
 	WorkloadStdVar int
+	BaseSeed       int
+	DeviceId       int
 }
 
 type CallbackData struct {
@@ -43,7 +44,7 @@ type CallbackData struct {
 }
 
 func main() {
-	log.Println("Starting edge device simulator with id:", DeviceId)
+	log.Println("Starting edge device simulator...")
 
 	config := getConfig()
 	log.Printf("Loaded config: %+v\n", config)
@@ -79,11 +80,27 @@ func getConfig() (config Config) {
 	config.WorkloadMean = *loadMeanFlag
 	config.WorkloadStdVar = *loadStdVarFlag
 
+	seed, err := strconv.Atoi(os.Getenv("BASE_SEED"))
+
+	if err != nil {
+		log.Fatal("Failed to parse BASE_SEED: ", err)
+	}
+
+	config.BaseSeed = seed
+
+	deviceId, err := strconv.Atoi(os.Getenv("DEVICE_ID"))
+
+	if err != nil {
+		deviceId = -1
+	}
+
+	config.DeviceId = deviceId
+
 	return
 }
 
 func scenarioOne(config Config) {
-	source := rand.NewPCG(uint64(BaseSeed), DeviceId)
+	source := rand.NewPCG(uint64(config.BaseSeed), uint64(config.DeviceId))
 
 	distExpo := distuv.Exponential{
 		Rate: config.ArrivalRate,
@@ -104,6 +121,7 @@ execution:
 			break execution
 		default:
 			callbackData := getCallbackData()
+			callbackData.DeviceID = config.DeviceId
 
 			n := int(distLogNormal.Rand())
 			callbackData.WorkloadSize = n
@@ -124,7 +142,6 @@ execution:
 func getCallbackData() CallbackData {
 	return CallbackData{
 		TaskID:        uuid.New().String(),
-		DeviceID:      DeviceId,
 		ExecutionSite: "local",
 		CreatedAt:     time.Now().Unix(),
 	}
