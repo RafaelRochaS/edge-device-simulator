@@ -1,5 +1,5 @@
 x-device-base: &device-base
-  build: .
+  image: rafaelrs94/xapp-mec:edge-sim
   network_mode: host
   mem_limit: 256m
   cpus: 0.25
@@ -8,6 +8,12 @@ x-device-base: &device-base
     - BASE_SEED=58802145
 
 services:
+  callback-server:
+    image: rafaelrs94/xapp-mec:callback-server
+    ports: ["8080:8080"]
+    volumes:
+      - .:/app
+
   device-1:
     <<: *device-base
     container_name: device-1
