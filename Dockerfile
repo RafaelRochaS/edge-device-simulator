@@ -15,4 +15,7 @@ FROM alpine:3
 COPY --from=builder /app/edge-sim ./
 RUN chmod +x ./edge-sim
 
+ENV BASE_SEED=123456
+ENV DEVICE_ID=-1
+
 ENTRYPOINT ["./edge-sim"]

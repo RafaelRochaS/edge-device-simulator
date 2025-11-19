@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
 	v1 "k8s.io/api/core/v1"
@@ -41,13 +42,29 @@ func OffloadTask(config models.Config, task models.Task) error {
 			Containers: []v1.Container{
 				{
 					Name:  fmt.Sprintf("Offload: %s-%s", task.DeviceId, task.Id),
-					Image: fmt.Sprintf("%s/%s", "localrepository:5000", task.Image),
-					Env: []v1.EnvVar{{
-						Name:  "WORKLOAD_SIZE",
-						Value: "200",
-					}, {
-						Name:  "DEVICE_ID",
-						Value: task.DeviceId}},
+					Image: task.Image,
+					Env: []v1.EnvVar{
+						{
+							Name:  "WORKLOAD_SIZE",
+							Value: strconv.Itoa(task.Workload),
+						},
+						{
+							Name:  "DEVICE_ID",
+							Value: task.DeviceId,
+						},
+						{
+							Name:  "EXECUTION_SITE",
+							Value: "cloud",
+						},
+						{
+							Name:  "TASK_ID",
+							Value: task.Id,
+						},
+						{
+							Name:  "CALLBACK_ADDR",
+							Value: task.CallbackUrl,
+						},
+					},
 				},
 			},
 		},

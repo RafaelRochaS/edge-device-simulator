@@ -17,6 +17,8 @@ func main() {
 
 	switch config.Scenario {
 	case models.Local:
+		scenarios.ScenarioZero(config)
+	case models.Cloud:
 		scenarios.ScenarioOne(config)
 	default:
 		log.Fatalf("Scenario %d not yet implemented.", config.Scenario)

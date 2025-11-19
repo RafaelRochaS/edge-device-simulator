@@ -15,9 +15,11 @@ func GetConfig() (config models.Config) {
 	lambdaFlag := flag.Float64("arrival-rate", 1.1, "Arrival rate of workloads in requests per second.")
 	callbackFlag := flag.String("callback", "http://localhost:8080", "Callback URL to send results to.")
 	durationFlag := flag.Duration("duration", time.Minute, "Time in seconds to run the simulation.")
-	loadMeanFlag := flag.Int("workload-mean", 22, "Mean of workload sizes.")
+	loadMeanFlag := flag.Int("workload-mean", 18, "Mean of workload sizes.")
 	loadStdVarFlag := flag.Int("workload-std-var", 2, "Standard deviation of workload sizes.")
 	kubeconfigPath := flag.String("kubeconfig", "./kubeconfig", "Path to kubeconfig file.")
+	taskImageFlag := flag.String("task-image", "task-sim:latest", "Task image to run on Kubernetes. Format image:tag. Not used on scenario 0.")
+	taskImageRepository := flag.String("task-image-repo", "rafaelrs94/xapp-mec", "Docker repository to pull task image from. Not used on scenario 0.")
 
 	flag.Parse()
 
@@ -32,6 +34,8 @@ func GetConfig() (config models.Config) {
 	config.WorkloadMean = *loadMeanFlag
 	config.WorkloadStdVar = *loadStdVarFlag
 	config.KubeconfigPath = *kubeconfigPath
+	config.TaskImage = *taskImageFlag
+	config.TaskImageRepository = *taskImageRepository
 
 	seed, err := strconv.Atoi(os.Getenv("BASE_SEED"))
 

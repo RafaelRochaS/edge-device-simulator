@@ -82,3 +82,7 @@ and latency.
 
 The scenario is activated by using the parameter `--scenario 2`. Alternatively, the docker compose file `scenario-2-compose.yml`
 can be used to start the devices with this scenario.
+
+**Note:** This scenario requires an endpoint listening that is able to perform intelligent
+offloading. The main idea is to use a 5G network, with an [O-RAN NearRT RIC](https://docs.o-ran-sc.org/en/latest/architecture/architecture.html) running, and xApp that can perform such offloading.
+The [xApp MEC](https://github.com/RafaelRochaS/xapp-mec-go) can be used for this purpose, alongside the [O-RAN SC RIC](https://github.com/o-ran-sc/ric-plt-ric-dep).
