@@ -1,30 +1,29 @@
+x-device-base: &device-base
+  build: .
+  network_mode: host
+  mem_limit: 256m
+  cpus: 0.25
+  entrypoint: ["./edge-sim", "--scenario", "0"]
+  environment:
+    - BASE_SEED=58802145
+
 services:
   device-1:
-    build: .
-    network_mode: host
-    mem_limit: 256m
-    cpus: 0.25
-    entrypoint: ["./edge-sim", "--scenario", "0"]
+    <<: *device-base
     container_name: device-1
     environment:
       - DEVICE_ID=1
       - BASE_SEED=58802145
+
   device-2:
-    build: .
-    network_mode: host
-    mem_limit: 256m
-    cpus: 0.25
-    entrypoint: [ "./edge-sim", "--scenario", "0" ]
+    <<: *device-base
     container_name: device-2
     environment:
       - DEVICE_ID=2
       - BASE_SEED=58802145
+
   device-3:
-    build: .
-    network_mode: host
-    mem_limit: 256m
-    cpus: 0.25
-    entrypoint: [ "./edge-sim", "--scenario", "0" ]
+    <<: *device-base
     container_name: device-3
     environment:
       - DEVICE_ID=3
