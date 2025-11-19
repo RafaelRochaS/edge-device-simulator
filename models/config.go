@@ -14,4 +14,5 @@ type Config struct {
 	KubeconfigPath      string
 	TaskImage           string
 	TaskImageRepository string
+	K8sOffloadNamespace string
 }

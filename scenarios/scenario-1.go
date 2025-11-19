@@ -43,6 +43,8 @@ execution:
 
 			log.Printf("Task offloaded, sleeping for %f seconds...\n", sleepTime)
 			time.Sleep(time.Duration(sleepTime))
+
+			return
 		}
 	}
 }

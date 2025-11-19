@@ -41,7 +41,7 @@ func OffloadTask(config models.Config, task models.Task) error {
 		Spec: v1.PodSpec{
 			Containers: []v1.Container{
 				{
-					Name:  fmt.Sprintf("Offload: %s-%s", task.DeviceId, task.Id),
+					Name:  fmt.Sprintf("task-container-%s", task.Id),
 					Image: task.Image,
 					Env: []v1.EnvVar{
 						{
@@ -72,7 +72,7 @@ func OffloadTask(config models.Config, task models.Task) error {
 
 	log.Println("Offloading task: ", task.Id)
 
-	_, err = client.CoreV1().Pods("offload-task").Create(context.TODO(), pod, metav1.CreateOptions{})
+	_, err = client.CoreV1().Pods(config.K8sOffloadNamespace).Create(context.TODO(), pod, metav1.CreateOptions{})
 
 	return err
 }
