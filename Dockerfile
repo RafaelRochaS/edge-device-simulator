@@ -1,4 +1,4 @@
-FROM golang:1.25-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
@@ -15,7 +15,4 @@ FROM alpine:3
 COPY --from=builder /app/edge-sim ./
 RUN chmod +x ./edge-sim
 
-ENV DEVICE_ID=0
-ENV BASE_SEED=58802145
-
-ENTRYPOINT ["./edge-sim", "--scenario", "0"]
+ENTRYPOINT ["./edge-sim"]

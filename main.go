@@ -57,6 +57,8 @@ func main() {
 	default:
 		log.Fatalf("Scenario %d not yet implemented.", config.Scenario)
 	}
+
+	log.Println("Finished scenario.")
 }
 
 func getConfig() (config Config) {
@@ -125,6 +127,8 @@ execution:
 
 			n := int(distLogNormal.Rand())
 			callbackData.WorkloadSize = n
+
+			log.Printf("Starting workload of size %d...\n", n)
 
 			duration := CpuBoundWork(n)
 			callbackData.Duration = duration.Seconds()
