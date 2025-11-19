@@ -17,6 +17,7 @@ func GetConfig() (config models.Config) {
 	durationFlag := flag.Duration("duration", time.Minute, "Time in seconds to run the simulation.")
 	loadMeanFlag := flag.Int("workload-mean", 22, "Mean of workload sizes.")
 	loadStdVarFlag := flag.Int("workload-std-var", 2, "Standard deviation of workload sizes.")
+	kubeconfigPath := flag.String("kubeconfig", "./kubeconfig", "Path to kubeconfig file.")
 
 	flag.Parse()
 
@@ -30,6 +31,7 @@ func GetConfig() (config models.Config) {
 	config.Duration = *durationFlag
 	config.WorkloadMean = *loadMeanFlag
 	config.WorkloadStdVar = *loadStdVarFlag
+	config.KubeconfigPath = *kubeconfigPath
 
 	seed, err := strconv.Atoi(os.Getenv("BASE_SEED"))
 

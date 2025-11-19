@@ -11,4 +11,5 @@ type Config struct {
 	WorkloadStdVar int
 	BaseSeed       int
 	DeviceId       int
+	KubeconfigPath string
 }

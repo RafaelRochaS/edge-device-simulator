@@ -65,6 +65,10 @@ at the cost of increased latency.
 The scenario is activated by using the parameter `--scenario 1`. Alternatively, the docker compose file `scenario-1-compose.yml`
 can be used to start the devices with this scenario.
 
+**Note:** Scenario 1 instantiates a pod in a Kubernetes cluster, and as such requires a kubeconfig file to be present, pointing
+to a valid cluster. The kubeconfig file can be created by running e.g. `gcloud container clusters get-credentials <cluster-name> --zone <zone>`, in a [GCP GKE cluster](https://cloud.google.com/kubernetes-engine?hl=en).
+Since such files are credentials, they are not included in this repository.
+
 ### 2: Hybrid Processing
 The last (current) scenario is the most intelligent one, where the device checks the size of the task and offloads it to the cloud
 if it is larger than a certain threshold. 

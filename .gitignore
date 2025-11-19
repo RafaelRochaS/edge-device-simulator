@@ -27,6 +27,8 @@ go.work.sum
 # env file
 .env
 
+kubeconfig
+
 # Editor/IDE
 # .idea/
 # .vscode/
