@@ -30,7 +30,7 @@ Usage of ./edge-sim:
 
 Sensible defaults are provided for all parameters, but they can be changed as needed.
 
-For correct RNG, the environment variables `BASE_SEED` and `DEVICE_ID` must be set. These are set via docker-compose,
+For correct RNG, the environment variables `BASE_SEED` and `DEVICE_ID` must be set. These are set via docker-compose
 but can also be set manually.
 
 ## Randomness
