@@ -119,13 +119,11 @@ jobs:
           image: rafaelrs94/xapp-mec:edge-sim
           upload-release-assets: false
           dependency-snapshot: true
-          artifact-name: edge-device-simulator-sbom
+          upload-artifact: false
 
-#      - name: Upload SBOM
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: sbom
-#          path: sbom.spdx
+      - uses: anchore/sbom-action/publish-sbom@v0
+        with:
+          sbom-artifact-match: ".*\\.spdx$"
 
       - name: Trivy scan
         uses: aquasecurity/trivy-action@master
