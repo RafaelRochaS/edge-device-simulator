@@ -11,21 +11,32 @@ The simulator can be configured via command line parameters. The available param
 ./edge-sim --help                                     
 Usage of ./edge-sim:
   -arrival-rate float
-    	Arrival rate of workloads in requests per second. (default 2)
+        Arrival rate of workloads in requests per second. (default 1.1)
   -callback string
-    	Callback URL to send results to. (default "http://localhost:8080")
+        Callback URL to send results to. (default "http://localhost:8080")
   -duration duration
-    	Time in seconds to run the simulation. (default 1m0s)
+        Time in seconds to run the simulation. (default 1m0s)
+  -k8s-offload-ns string
+        Namespace to offload tasks to. Not used on scenario 0. (default "task-offload")
+  -kubeconfig string
+        Path to kubeconfig file. (default "./kubeconfig")
+  -mec-handler-addr string
+        MEC handler address. Used only on scenario 2. (default "http://mec-handler:8080")
+  -offload-threshold int
+        Max task size to execute locally. Tasks greater are offloaded to the MEC handler. Used only on scenario 2. (default 100000)
   -scenario int
-    	Scenario to run:
-    	0 - Local processing
-    	1 - Cloud processing
-    	2 - Hybrid edge with xApp (default 2)
+        Scenario to run:
+        0 - Local processing
+        1 - Cloud processing
+        2 - Hybrid edge with xApp (default 2)
+  -task-image string
+        Task image to run on Kubernetes. Not used on scenario 0. (default "task-sim")
+  -task-image-repo string
+        Docker repository to pull task image from. Not used on scenario 0. (default "rafaelrs94/xapp-mec")
   -workload-mean int
-    	Mean of workload sizes. (default 25)
+        Mean of workload sizes. (default 18)
   -workload-std-var int
-    	Standard deviation of workload sizes. (default 3)
-
+        Standard deviation of workload sizes. (default 2)
 ```
 
 Sensible defaults are provided for all parameters, but they can be changed as needed.
