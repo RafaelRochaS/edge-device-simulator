@@ -3,7 +3,7 @@ x-device-base: &device-base
   network_mode: host
   mem_limit: 256m
   cpus: 0.25
-  entrypoint: ["./edge-sim", "--scenario", "0", "--duration", "30m"]
+  entrypoint: ["./edge-sim", "--scenario", "0", "--duration", "10m"]
   depends_on: ["callback-server"]
   environment:
     - BASE_SEED=58802145

@@ -40,7 +40,7 @@ execution:
 
 			sleepTime := distExpo.Rand() * time.Second.Seconds()
 
-			log.Printf("Finished, sleeping for %f seconds...\n", sleepTime)
+			log.Printf("Task running, sleeping for %f seconds...\n", sleepTime)
 			time.Sleep(time.Duration(sleepTime))
 		}
 	}
