@@ -1,0 +1,39 @@
+x-device-base: &device-base
+  image: rafaelrs94/xapp-mec:edge-sim
+  network_mode: host
+  mem_limit: 256m
+  cpus: 0.25
+  entrypoint: ["./edge-sim", "--scenario", "2", "--duration", "10m", "--callback", "https://blowiest-unwordably-leta.ngrok-free.dev", "--mec-handler-addr", "http://10.111.234.40:8080"]
+  depends_on: ["callback-server"]
+  volumes:
+    - ./kubeconfig:/kubeconfig
+  environment:
+    - BASE_SEED=58802145
+
+services:
+  callback-server:
+    image: rafaelrs94/xapp-mec:callback-server
+    ports: ["8080:8080"]
+    volumes:
+      - .:/output
+
+  device-1:
+    <<: *device-base
+    container_name: device-1
+    environment:
+      - DEVICE_ID=1
+      - BASE_SEED=58802145
+
+  device-2:
+    <<: *device-base
+    container_name: device-2
+    environment:
+      - DEVICE_ID=2
+      - BASE_SEED=58802145
+
+  device-3:
+    <<: *device-base
+    container_name: device-3
+    environment:
+      - DEVICE_ID=3
+      - BASE_SEED=58802145
