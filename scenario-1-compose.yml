@@ -1,0 +1,51 @@
+x-device-base: &device-base
+  image: rafaelrs94/xapp-mec:edge-sim
+  network_mode: host
+  mem_limit: 256m
+  cpus: 0.25
+  entrypoint: ["./edge-sim", "--scenario", "1", "--duration", "10m"]
+  depends_on: ["callback-server"]
+  environment:
+    - BASE_SEED=58802145
+
+services:
+  callback-server:
+    image: rafaelrs94/xapp-mec:callback-server
+    ports: ["8080:8080"]
+    volumes:
+      - .:/app
+
+  device-1:
+    <<: *device-base
+    container_name: device-1
+    environment:
+      - DEVICE_ID=1
+      - BASE_SEED=58802145
+
+  device-2:
+    <<: *device-base
+    container_name: device-2
+    environment:
+      - DEVICE_ID=2
+      - BASE_SEED=58802145
+
+  device-3:
+    <<: *device-base
+    container_name: device-3
+    environment:
+      - DEVICE_ID=3
+      - BASE_SEED=58802145
+
+  device-4:
+    <<: *device-base
+    container_name: device-4
+    environment:
+      - DEVICE_ID=4
+      - BASE_SEED=58802145
+
+  device-5:
+    <<: *device-base
+    container_name: device-5
+    environment:
+      - DEVICE_ID=5
+      - BASE_SEED=58802145
