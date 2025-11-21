@@ -117,20 +117,22 @@ jobs:
         uses: anchore/sbom-action@v0.15.11
         with:
           image: rafaelrs94/xapp-mec:edge-sim
-          artifact-name: sbom.spdx
+          upload-release-assets: false
+          dependency-snapshot: true
+          output-file: ./
 
-      - name: Upload SBOM
-        uses: actions/upload-artifact@v4
-        with:
-          name: sbom
-          path: sbom.spdx
+#      - name: Upload SBOM
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: sbom
+#          path: sbom.spdx
 
       - name: Trivy scan
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: rafaelrs94/xapp-mec:edge-sim
+          format: 'table'
           severity: CRITICAL,HIGH
-          ignore-unfixed: true
           exit-code: 1
 
       - name: Push image
