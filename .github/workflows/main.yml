@@ -121,7 +121,8 @@ jobs:
           dependency-snapshot: true
           upload-artifact: false
 
-      - uses: anchore/sbom-action/publish-sbom@v0
+      - name: Publish SBOM
+        uses: anchore/sbom-action/publish-sbom@v0
         with:
           sbom-artifact-match: ".*\\.spdx$"
 
