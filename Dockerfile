@@ -1,8 +1,4 @@
-FROM google/cloud-sdk:latest AS cloud-sdk-builder
-
-RUN gcloud components install gke-gcloud-auth-plugin
-
-FROM golang:1.25-alpine AS builder
+FROM golang:1.25 AS builder
 
 WORKDIR /app
 
@@ -13,10 +9,10 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./edge-sim .
 
-FROM alpine:3
+FROM debian:11-slim
 
 COPY --from=builder /app/edge-sim ./
-COPY --from=cloud-sdk-builder /usr/lib/google-cloud-sdk/bin/gke-gcloud-auth-plugin /usr/local/bin/gke-gcloud-auth-plugin
+
 RUN chmod +x ./edge-sim
 
 ENV BASE_SEED=123456

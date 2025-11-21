@@ -20,7 +20,7 @@ type ScenarioInput struct {
 }
 
 func scenarioWrapper(config models.Config, runner func(input ScenarioInput)) {
-	distExpo, distLogNormal := utils.GetDistributions(config)
+	distExpo, _ := utils.GetDistributions(config)
 	timeout := time.After(config.Duration)
 
 	var wg sync.WaitGroup
@@ -33,15 +33,16 @@ execution:
 		default:
 
 			wg.Go(func() {
+				runnerDistExpo, runnerDistLogNormal := utils.GetDistributions(config)
 				runner(ScenarioInput{
-					config, distExpo, distLogNormal,
+					config, runnerDistExpo, runnerDistLogNormal,
 				})
 			})
 
-			sleepTime := distExpo.Rand() * time.Second.Seconds()
+			sleepTime := time.Duration(distExpo.Rand() * float64(time.Second))
 
-			log.Printf("Task running, sleeping for %f seconds...\n", sleepTime)
-			time.Sleep(time.Duration(sleepTime))
+			log.Printf("Task running, sleeping for %v ...\n", sleepTime)
+			time.Sleep(sleepTime)
 		}
 	}
 
