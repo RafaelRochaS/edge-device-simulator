@@ -22,6 +22,7 @@ func GetConfig() (config models.Config) {
 	taskImageRepository := flag.String("task-image-repo", "rafaelrs94/xapp-mec", "Docker repository to pull task image from. Not used on scenario 0.")
 	k8sOffloadNamespace := flag.String("k8s-offload-ns", "task-offload", "Namespace to offload tasks to. Not used on scenario 0.")
 	offloadThreshold := flag.Int("offload-threshold", 100_000, "Max task size to execute locally. Tasks greater are offloaded to the MEC handler. Used only on scenario 2.")
+	mecHandlerAddr := flag.String("mec-handler-addr", "http://mec-handler:8080", "MEC handler address. Used only on scenario 2.")
 
 	flag.Parse()
 
@@ -40,6 +41,7 @@ func GetConfig() (config models.Config) {
 	config.TaskImageRepository = *taskImageRepository
 	config.K8sOffloadNamespace = *k8sOffloadNamespace
 	config.MECOffloadThreshold = *offloadThreshold
+	config.MECHandlerAddr = *mecHandlerAddr
 
 	seed, err := strconv.Atoi(os.Getenv("BASE_SEED"))
 
