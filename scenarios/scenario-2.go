@@ -15,7 +15,7 @@ func ScenarioTwo(config models.Config) {
 			log.Println("Creating task: ", task)
 
 			if task.Workload > config.MECOffloadThreshold {
-				err := utils.OffloadTask(config, *task)
+				err := utils.MECOffload(*task, config.MECHandlerAddr)
 
 				if err != nil {
 					log.Println("Failed to offload task: ", err)
