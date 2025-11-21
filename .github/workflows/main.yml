@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
   security-events: write
   actions: read
   id-token: write
@@ -117,14 +117,13 @@ jobs:
         uses: anchore/sbom-action@v0.15.11
         with:
           image: rafaelrs94/xapp-mec:edge-sim
-          artifact-name: sbom-cyclonedx.json
-          dependency-snapshot: true
+          artifact-name: sbom.spdx
 
       - name: Upload SBOM
         uses: actions/upload-artifact@v4
         with:
           name: sbom
-          path: sbom-cyclonedx.json
+          path: sbom.spdx
 
       - name: Trivy scan
         uses: aquasecurity/trivy-action@master
