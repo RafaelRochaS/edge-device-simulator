@@ -1,4 +1,15 @@
 # Edge Device Simulator: IoT simulator for task offload analysis and experiments on Cloud and Edge
+
+![CI](https://github.com/RafaelRochaS/edge-device-simulator/actions/workflows/ci.yml/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/RafaelRochaS/edge-device-simulator)](https://goreportcard.com/report/github.com/RafaelRochaS/edge-device-simulator)
+![Go Version](https://img.shields.io/badge/Go-1.24-blue)
+![CodeQL](https://github.com/RafaelRochaS/edge-device-simulator/actions/workflows/codeql.yml/badge.svg)
+[![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=github.com_RafaelRochaS_edge-device-simulator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=github.com_RafaelRochaS_edge-device-simulator)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=github.com_RafaelRochaS_edge-device-simulator&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=github.com_RafaelRochaS_edge-device-simulator)
+![Security](https://img.shields.io/badge/security-scan-green)
+![License](https://img.shields.io/github/license/RafaelRochaS/edge-device-simulator)
+![Last Commit](https://img.shields.io/github/last-commit/RafaelRochaS/edge-device-simulator)
+
 Simulates a device on the edge of a 5G network that offloads a task or executes it locally. The simulator was conceived to be used
 on O-RAN 5G networks but can be expanded to different scenarios.
 
