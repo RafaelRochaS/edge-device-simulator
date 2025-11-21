@@ -23,7 +23,7 @@ func scenarioWrapper(config models.Config, runner func(input ScenarioInput)) {
 	distExpo, distLogNormal := utils.GetDistributions(config)
 	timeout := time.After(config.Duration)
 
-	wg := sync.WaitGroup{}
+	var wg sync.WaitGroup
 
 execution:
 	for {
