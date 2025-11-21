@@ -119,7 +119,6 @@ jobs:
           image: rafaelrs94/xapp-mec:edge-sim
           upload-release-assets: false
           dependency-snapshot: true
-          output-file: ./
 
 #      - name: Upload SBOM
 #        uses: actions/upload-artifact@v4
