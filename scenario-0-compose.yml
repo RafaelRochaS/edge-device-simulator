@@ -13,7 +13,7 @@ services:
     image: rafaelrs94/xapp-mec:callback-server
     ports: ["8080:8080"]
     volumes:
-      - .:.
+      - .:/output
 
   device-1:
     <<: *device-base

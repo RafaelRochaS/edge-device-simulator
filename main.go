@@ -26,5 +26,5 @@ func main() {
 		log.Fatalf("Scenario %d not yet implemented.", config.Scenario)
 	}
 
-	log.Println("Finished scenario.")
+	log.Println("Finished simulation.")
 }

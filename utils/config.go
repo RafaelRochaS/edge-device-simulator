@@ -12,10 +12,10 @@ import (
 
 func GetConfig() (config models.Config) {
 	scenario := flag.Int("scenario", 2, "Scenario to run:\n0 - Local processing\n1 - Cloud processing\n2 - Hybrid edge with xApp")
-	lambda := flag.Float64("arrival-rate", 1.1, "Arrival rate of workloads in requests per second.")
+	lambda := flag.Float64("arrival-rate", 0.2, "Arrival rate of workloads in requests per second.")
 	callback := flag.String("callback", "http://localhost:8080", "Callback URL to send results to.")
-	duration := flag.Duration("duration", time.Minute, "Time in seconds to run the simulation.")
-	loadMean := flag.Int("workload-mean", 18, "Mean of workload sizes.")
+	duration := flag.Duration("duration", time.Minute, "Duration of the simulation.")
+	loadMean := flag.Int("workload-mean", 15, "Mean of workload sizes.")
 	loadStdVar := flag.Int("workload-std-var", 2, "Standard deviation of workload sizes.")
 	kubeconfigPath := flag.String("kubeconfig", "./kubeconfig", "Path to kubeconfig file.")
 	taskImage := flag.String("task-image", "task-sim", "Task image to run on Kubernetes. Not used on scenario 0.")
