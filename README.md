@@ -7,7 +7,6 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RafaelRochaS_edge-device-simulator&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=github.com_RafaelRochaS_edge-device-simulator)
 ![Security](https://img.shields.io/badge/security-scan-green)
 ![License](https://img.shields.io/github/license/RafaelRochaS/edge-device-simulator)
-![Last Commit](https://img.shields.io/github/last-commit/RafaelRochaS/edge-device-simulator)
 
 Simulates a device on the edge of a 5G network that offloads a task or executes it locally. The simulator was conceived to be used
 on O-RAN 5G networks but can be expanded to different scenarios.
