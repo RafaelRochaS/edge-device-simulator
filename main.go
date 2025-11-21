@@ -20,6 +20,8 @@ func main() {
 		scenarios.ScenarioZero(config)
 	case models.Cloud:
 		scenarios.ScenarioOne(config)
+	case models.MEC:
+		scenarios.ScenarioTwo(config)
 	default:
 		log.Fatalf("Scenario %d not yet implemented.", config.Scenario)
 	}

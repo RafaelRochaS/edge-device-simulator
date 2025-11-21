@@ -18,18 +18,21 @@ execution:
 		case <-timeout:
 			break execution
 		default:
-			callbackData := utils.GetCallbackData()
-			callbackData.DeviceID = config.DeviceId
 
-			n := int(distLogNormal.Rand())
-			callbackData.WorkloadSize = n
+			go func() {
+				callbackData := utils.GetCallbackData()
+				callbackData.DeviceID = config.DeviceId
 
-			log.Printf("Starting workload of size %d...\n", n)
+				n := int(distLogNormal.Rand())
+				callbackData.WorkloadSize = n
 
-			duration := utils.CpuBoundWork(n)
-			callbackData.Duration = duration.Seconds()
+				log.Printf("Starting workload of size %d...\n", n)
 
-			utils.SendCallback(callbackData, config.Callback)
+				duration := utils.CpuBoundWork(n)
+				callbackData.Duration = duration.Seconds()
+
+				utils.SendCallback(callbackData, config.Callback)
+			}()
 
 			sleepTime := distExpo.Rand() * time.Second.Seconds()
 

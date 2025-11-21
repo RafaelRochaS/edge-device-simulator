@@ -15,4 +15,5 @@ type Config struct {
 	TaskImage           string
 	TaskImageRepository string
 	K8sOffloadNamespace string
+	MECOffloadThreshold int
 }
