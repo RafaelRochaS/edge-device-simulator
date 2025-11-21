@@ -35,17 +35,3 @@ services:
     environment:
       - DEVICE_ID=3
       - BASE_SEED=58802145
-
-  device-4:
-    <<: *device-base
-    container_name: device-4
-    environment:
-      - DEVICE_ID=4
-      - BASE_SEED=58802145
-
-  device-5:
-    <<: *device-base
-    container_name: device-5
-    environment:
-      - DEVICE_ID=5
-      - BASE_SEED=58802145
