@@ -14,8 +14,6 @@ func makePostCall(data any, url string) error {
 		log.Fatal("Failed to parse body: ", err)
 	}
 
-	log.Println("Body:", string(body))
-
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(body))
 
 	if err != nil {

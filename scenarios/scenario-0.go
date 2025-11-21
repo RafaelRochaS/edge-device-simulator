@@ -8,6 +8,6 @@ func ScenarioZero(config models.Config) {
 	scenarioWrapper(
 		config,
 		func(input ScenarioInput) {
-			go executeTask(input.config, input.DistLogNormal)
+			executeTask(input.config, input.DistLogNormal)
 		})
 }

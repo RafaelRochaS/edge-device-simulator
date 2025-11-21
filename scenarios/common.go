@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
@@ -22,6 +23,8 @@ func scenarioWrapper(config models.Config, runner func(input ScenarioInput)) {
 	distExpo, distLogNormal := utils.GetDistributions(config)
 	timeout := time.After(config.Duration)
 
+	wg := sync.WaitGroup{}
+
 execution:
 	for {
 		select {
@@ -29,8 +32,10 @@ execution:
 			break execution
 		default:
 
-			runner(ScenarioInput{
-				config, distExpo, distLogNormal,
+			wg.Go(func() {
+				runner(ScenarioInput{
+					config, distExpo, distLogNormal,
+				})
 			})
 
 			sleepTime := distExpo.Rand() * time.Second.Seconds()
@@ -39,6 +44,9 @@ execution:
 			time.Sleep(time.Duration(sleepTime))
 		}
 	}
+
+	log.Println("Finished execution, waiting for running jobs.")
+	wg.Wait()
 }
 
 func generateTask(config models.Config, distLogNormal distuv.LogNormal) *models.Task {

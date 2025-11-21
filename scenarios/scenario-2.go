@@ -22,7 +22,7 @@ func ScenarioTwo(config models.Config) {
 				}
 
 			} else {
-				go executeTask(config, input.DistLogNormal)
+				executeTask(config, input.DistLogNormal)
 			}
 		})
 }
