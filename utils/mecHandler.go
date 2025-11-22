@@ -20,7 +20,7 @@ func MECOffload(task models.Task, url string) error {
 		return err
 	}
 
-	return startTask(offloadTaskId, url)
+	return startTask(task.DeviceId, offloadTaskId, url)
 }
 
 func registerTask(task models.Task, url string) (string, error) {
@@ -43,9 +43,15 @@ func registerTask(task models.Task, url string) (string, error) {
 	return taskResponse.Id, nil
 }
 
-func startTask(taskId string, url string) error {
+func startTask(deviceId int, taskId, url string) error {
 	log.Println("Starting task: ", taskId)
-	_, err := makePostCall(taskId, fmt.Sprintf("%s%s", url, OffloadEndpoint))
+
+	startTaskRequest := models.StartTaskRequest{
+		Id:       taskId,
+		DeviceId: deviceId,
+	}
+
+	_, err := makePostCall(startTaskRequest, fmt.Sprintf("%s%s", url, OffloadEndpoint))
 
 	return err
 }

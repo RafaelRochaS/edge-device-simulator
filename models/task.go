@@ -2,7 +2,7 @@ package models
 
 type Task struct {
 	Id          string `json:"id"`
-	DeviceId    string `json:"deviceId"`
+	DeviceId    int    `json:"deviceId"`
 	Image       string `json:"image"`
 	CPU         string `json:"cpu"`
 	Mem         int    `json:"mem"`
@@ -12,7 +12,7 @@ type Task struct {
 
 type StartTaskRequest struct {
 	Id       string `json:"id"`
-	DeviceId string `json:"deviceId"`
+	DeviceId int    `json:"deviceId"`
 }
 
 type RegisterTaskResponse struct {
