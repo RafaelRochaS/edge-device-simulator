@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
+	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -29,6 +30,8 @@ func OffloadTask(config models.Config, task models.Task) error {
 	if err != nil {
 		return err
 	}
+
+	var ttlSecondsAfterFinished int32 = 5
 
 	pod := &v1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -67,12 +70,24 @@ func OffloadTask(config models.Config, task models.Task) error {
 					},
 				},
 			},
+			RestartPolicy: v1.RestartPolicyOnFailure,
+		},
+	}
+
+	jobsClient := client.BatchV1().Jobs(config.K8sOffloadNamespace)
+	job := &batchv1.Job{
+		ObjectMeta: pod.ObjectMeta,
+		Spec: batchv1.JobSpec{
+			TTLSecondsAfterFinished: &ttlSecondsAfterFinished,
+			Template: v1.PodTemplateSpec{
+				Spec: pod.Spec,
+			},
 		},
 	}
 
 	log.Println("Offloading task: ", task.Id)
 
-	_, err = client.CoreV1().Pods(config.K8sOffloadNamespace).Create(context.TODO(), pod, metav1.CreateOptions{})
+	_, err = jobsClient.Create(context.TODO(), job, metav1.CreateOptions{})
 
 	return err
 }

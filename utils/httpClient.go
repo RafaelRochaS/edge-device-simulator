@@ -26,5 +26,7 @@ func makePostCall(data any, url string) (string, error) {
 
 	respBody, err := io.ReadAll(resp.Body)
 
+	log.Println("Response body:", string(respBody))
+
 	return string(respBody), err
 }
