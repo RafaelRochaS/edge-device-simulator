@@ -9,7 +9,7 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./edge-sim .
 
-FROM debian:11-slim
+FROM debian:13-slim
 
 COPY --from=builder /app/edge-sim ./
 
