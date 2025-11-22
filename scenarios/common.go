@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -53,8 +54,14 @@ execution:
 func generateTask(config models.Config, distLogNormal distuv.LogNormal) *models.Task {
 	task := new(models.Task)
 
+	deviceId, err := strconv.Atoi(os.Getenv("DEVICE_ID"))
+
+	if err != nil {
+		deviceId = -1
+	}
+
 	task.Workload = int(distLogNormal.Rand())
-	task.DeviceId = os.Getenv("DEVICE_ID")
+	task.DeviceId = deviceId
 	task.Image = fmt.Sprintf("%s:%s", config.TaskImageRepository, config.TaskImage)
 	task.CPU = "1"
 	task.Mem = 512
