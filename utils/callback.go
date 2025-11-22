@@ -18,7 +18,7 @@ func GetCallbackData() models.CallbackData {
 
 func SendCallback(data models.CallbackData, url string) {
 	log.Printf("Sending callback: %+v\n", data)
-	err := makePostCall(data, url)
+	_, err := makePostCall(data, url)
 
 	if err != nil {
 		log.Println("Failed to send callback: ", err)

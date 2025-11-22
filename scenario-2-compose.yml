@@ -3,7 +3,7 @@ x-device-base: &device-base
   network_mode: host
   mem_limit: 256m
   cpus: 0.25
-  entrypoint: ["./edge-sim", "--scenario", "2", "--duration", "10m", "--callback", "https://blowiest-unwordably-leta.ngrok-free.dev", "--mec-handler-addr", "http://10.111.234.40:8080"]
+  entrypoint: ["./edge-sim", "--scenario", "2", "--duration", "10m", "--callback", "https://blowiest-unwordably-leta.ngrok-free.dev", "--mec-handler-addr", "http://192.168.15.152:8081"]
   depends_on: ["callback-server"]
   volumes:
     - ./kubeconfig:/kubeconfig

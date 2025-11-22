@@ -13,6 +13,8 @@ on O-RAN 5G networks but can be expanded to different scenarios.
 
 ## Usage
 The simulator can be run locally or in a docker container. The docker image can be built using the `Dockerfile` in the root directory.
+Additionally, the built image can be found on [Docker Hub](https://hub.docker.com/repository/docker/rafaelrs94/xapp-mec/tags/edge-sim/), and Docker compose
+files are provided for running the simulator in different scenarios.
 
 ## Configuration
 The simulator can be configured via command line parameters. The available parameters are:

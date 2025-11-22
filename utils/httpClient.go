@@ -3,11 +3,12 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 )
 
-func makePostCall(data any, url string) error {
+func makePostCall(data any, url string) (string, error) {
 	body, err := json.Marshal(data)
 
 	if err != nil {
@@ -23,5 +24,7 @@ func makePostCall(data any, url string) error {
 	log.Println("Response status:", resp.StatusCode)
 	log.Println("Callback sent successfully.")
 
-	return nil
+	respBody, err := io.ReadAll(resp.Body)
+
+	return string(respBody), err
 }
