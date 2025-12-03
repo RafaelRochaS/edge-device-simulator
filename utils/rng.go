@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log/slog"
 	"math/rand/v2"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
@@ -8,6 +9,7 @@ import (
 )
 
 func GetDistributions(config models.Config) (distuv.Exponential, distuv.LogNormal) {
+	slog.Debug("Generating distributions...")
 	source := rand.NewPCG(uint64(config.BaseSeed), uint64(config.DeviceId))
 
 	distExpo := distuv.Exponential{

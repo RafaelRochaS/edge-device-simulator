@@ -3,7 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
 )
@@ -12,11 +12,12 @@ const TasksEndpoint = "/ric/v1/mec/tasks"
 const OffloadEndpoint = "/ric/v1/mec/start"
 
 func MECOffload(task models.Task, url string) error {
-	log.Println("Offloading to MEC handler task: ", task)
+	slog.Info("Offloading to MEC handler task: ", task)
 
 	offloadTaskId, err := registerTask(task, url)
 
 	if err != nil {
+		slog.Error("Failed to offload task: ", err)
 		return err
 	}
 
@@ -24,10 +25,11 @@ func MECOffload(task models.Task, url string) error {
 }
 
 func registerTask(task models.Task, url string) (string, error) {
-	log.Println("Registering task: ", task)
+	slog.Debug("Registering task: ", task)
 	createdTask, err := makePostCall(task, fmt.Sprintf("%s%s", url, TasksEndpoint))
 
 	if err != nil {
+		slog.Error("Failed to register task: ", err)
 		return "", err
 	}
 
@@ -35,23 +37,31 @@ func registerTask(task models.Task, url string) (string, error) {
 
 	err = json.Unmarshal([]byte(createdTask), &taskResponse)
 
+	slog.Debug("Task response: ", taskResponse)
+
 	if err != nil {
 		return "", err
 	}
 
-	log.Println("Task registered successfully: ", taskResponse)
+	slog.Debug("Task registered successfully: ", taskResponse)
 	return taskResponse.Id, nil
 }
 
 func startTask(deviceId int, taskId, url string) error {
-	log.Println("Starting task: ", taskId)
+	slog.Info("Starting task: ", taskId)
 
 	startTaskRequest := models.StartTaskRequest{
 		Id:       taskId,
 		DeviceId: deviceId,
 	}
 
+	slog.Debug("Starting task request: ", startTaskRequest)
+
 	_, err := makePostCall(startTaskRequest, fmt.Sprintf("%s%s", url, OffloadEndpoint))
+
+	if err != nil {
+		slog.Error("Failed to start task: ", err)
+	}
 
 	return err
 }

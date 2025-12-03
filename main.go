@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
 	"github.com/RafaelRochaS/edge-device-simulator/scenarios"
@@ -11,9 +11,9 @@ import (
 func main() {
 	config := utils.GetConfig()
 
-	log.Println("Starting edge device simulator...")
-	log.Printf("Loaded config: %+v\n", config)
-	log.Println("Starting scenario...")
+	slog.Info("Starting edge device simulator...")
+	slog.Debug("Loaded config: %+v\n", config)
+	slog.Info("Starting scenario...")
 
 	switch config.Scenario {
 	case models.Local:
@@ -23,8 +23,8 @@ func main() {
 	case models.MEC:
 		scenarios.ScenarioTwo(config)
 	default:
-		log.Fatalf("Scenario %d not yet implemented.", config.Scenario)
+		slog.Error("Scenario %d not yet implemented.", config.Scenario)
 	}
 
-	log.Println("Finished simulation.")
+	slog.Info("Finished simulation.")
 }

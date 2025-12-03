@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"log/slog"
+	"time"
+)
 
 type Config struct {
 	Scenario            Scenario
@@ -17,4 +20,5 @@ type Config struct {
 	K8sOffloadNamespace string
 	MECOffloadThreshold int
 	MECHandlerAddr      string
+	LogLevel            slog.Level
 }

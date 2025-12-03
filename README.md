@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/RafaelRochaS/edge-device-simulator/actions/workflows/main.yml/badge.svg)](https://github.com/RafaelRochaS/edge-device-simulator/actions/workflows/main.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/RafaelRochaS/edge-device-simulator)](https://goreportcard.com/report/github.com/RafaelRochaS/edge-device-simulator)
-![Go Version](https://img.shields.io/badge/Go-1.24-blue)
+![Go Version](https://img.shields.io/badge/Go-1.25-blue)
 [![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=RafaelRochaS_edge-device-simulator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=github.com_RafaelRochaS_edge-device-simulator)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RafaelRochaS_edge-device-simulator&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=github.com_RafaelRochaS_edge-device-simulator)
 ![Security](https://img.shields.io/badge/security-scan-green)

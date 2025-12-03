@@ -1,7 +1,7 @@
 package scenarios
 
 import (
-	"log"
+	"log/slog"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
 	"github.com/RafaelRochaS/edge-device-simulator/utils"
@@ -13,12 +13,12 @@ func ScenarioOne(config models.Config) {
 		func(input ScenarioInput) {
 			task := generateTask(input.config, input.DistLogNormal)
 
-			log.Println("Creating task: ", task)
+			slog.Info("Creating task: ", task)
 
 			err := utils.OffloadTask(config, *task)
 
 			if err != nil {
-				log.Println("Failed to offload task: ", err)
+				slog.Error("Failed to offload task: ", err)
 			}
 		})
 }

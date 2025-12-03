@@ -2,7 +2,7 @@ package scenarios
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 	"strconv"
 	"sync"
@@ -21,10 +21,14 @@ type ScenarioInput struct {
 }
 
 func scenarioWrapper(config models.Config, runner func(input ScenarioInput)) {
+	slog.Debug("Running scenario wrapper")
+
 	distExpo, _ := utils.GetDistributions(config)
 	timeout := time.After(config.Duration)
 
 	var wg sync.WaitGroup
+
+	slog.Debug("Starting execution loop...")
 
 execution:
 	for {
@@ -34,6 +38,7 @@ execution:
 		default:
 
 			wg.Go(func() {
+				slog.Debug("Starting task execution...")
 				runnerDistExpo, runnerDistLogNormal := utils.GetDistributions(config)
 				runner(ScenarioInput{
 					config, runnerDistExpo, runnerDistLogNormal,
@@ -42,16 +47,17 @@ execution:
 
 			sleepTime := time.Duration(distExpo.Rand() * float64(time.Second))
 
-			log.Printf("Task running, sleeping for %v ...\n", sleepTime)
+			slog.Info("Task running, sleeping for %v ...\n", sleepTime)
 			time.Sleep(sleepTime)
 		}
 	}
 
-	log.Println("Finished execution, waiting for running jobs.")
+	slog.Info("Finished execution, waiting for running jobs.")
 	wg.Wait()
 }
 
 func generateTask(config models.Config, distLogNormal distuv.LogNormal) *models.Task {
+	slog.Debug("Generating task...")
 	task := new(models.Task)
 
 	deviceId, err := strconv.Atoi(os.Getenv("DEVICE_ID"))
@@ -68,20 +74,26 @@ func generateTask(config models.Config, distLogNormal distuv.LogNormal) *models.
 	task.CallbackUrl = config.Callback
 	task.Id = uuid.New().String()
 
+	slog.Debug("Generated task: ", task)
+
 	return task
 }
 
 func executeTask(config models.Config, distLogNormal distuv.LogNormal) {
+	slog.Debug("Executing task...")
+
 	callbackData := utils.GetCallbackData()
 	callbackData.DeviceID = config.DeviceId
 
 	n := int(distLogNormal.Rand())
 	callbackData.WorkloadSize = n
 
-	log.Printf("Starting workload of size %d...\n", n)
+	slog.Debug("Starting workload of size %d...\n", n)
 
 	duration := utils.CpuBoundWork(n)
 	callbackData.Duration = duration.Seconds()
+
+	slog.Debug("Generated callback data: ", callbackData)
 
 	utils.SendCallback(callbackData, config.Callback)
 }

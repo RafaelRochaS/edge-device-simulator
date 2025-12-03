@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"log"
+	"log/slog"
 	"time"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
@@ -17,10 +17,10 @@ func GetCallbackData() models.CallbackData {
 }
 
 func SendCallback(data models.CallbackData, url string) {
-	log.Printf("Sending callback: %+v\n", data)
+	slog.Debug("Sending callback: %+v\n", data)
 	_, err := makePostCall(data, url)
 
 	if err != nil {
-		log.Println("Failed to send callback: ", err)
+		slog.Warn("Failed to send callback: ", err)
 	}
 }

@@ -2,15 +2,18 @@ package utils
 
 import (
 	"flag"
-	"log"
+	"log/slog"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/RafaelRochaS/edge-device-simulator/models"
 )
 
 func GetConfig() (config models.Config) {
+	slog.Debug("Parsing command line arguments...")
+
 	scenario := flag.Int("scenario", 2, "Scenario to run:\n0 - Local processing\n1 - Cloud processing\n2 - Hybrid edge with xApp")
 	lambda := flag.Float64("arrival-rate", 0.8, "Arrival rate of workloads in requests per second.")
 	callback := flag.String("callback", "http://localhost:8080", "Callback URL to send results to.")
@@ -23,6 +26,7 @@ func GetConfig() (config models.Config) {
 	k8sOffloadNamespace := flag.String("k8s-offload-ns", "task-offload", "Namespace to offload tasks to. Not used on scenario 0.")
 	offloadThreshold := flag.Int("offload-threshold", 100_000, "Max task size to execute locally. Tasks greater are offloaded to the MEC handler. Used only on scenario 2.")
 	mecHandlerAddr := flag.String("mec-handler-addr", "http://mec-handler:8080", "MEC handler address. Used only on scenario 2.")
+	logLevel := flag.String("log-level", "info", "Log level. Valid values: debug, info, warn, error.")
 
 	flag.Parse()
 
@@ -42,11 +46,14 @@ func GetConfig() (config models.Config) {
 	config.K8sOffloadNamespace = *k8sOffloadNamespace
 	config.MECOffloadThreshold = *offloadThreshold
 	config.MECHandlerAddr = *mecHandlerAddr
+	config.LogLevel = parseLogLevel(*logLevel)
+
+	slog.SetLogLoggerLevel(config.LogLevel)
 
 	seed, err := strconv.Atoi(os.Getenv("BASE_SEED"))
 
 	if err != nil {
-		log.Fatal("Failed to parse BASE_SEED: ", err)
+		slog.Error("Failed to parse BASE_SEED: ", err)
 	}
 
 	config.BaseSeed = seed
@@ -60,4 +67,19 @@ func GetConfig() (config models.Config) {
 	config.DeviceId = deviceId
 
 	return
+}
+
+func parseLogLevel(flagVal string) slog.Level {
+	switch strings.ToLower(flagVal) {
+	case "debug":
+		return slog.LevelDebug
+	case "info":
+		return slog.LevelInfo
+	case "warn":
+		return slog.LevelWarn
+	case "error":
+		return slog.LevelError
+	default:
+		return slog.LevelInfo
+	}
 }
