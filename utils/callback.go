@@ -17,10 +17,10 @@ func GetCallbackData() models.CallbackData {
 }
 
 func SendCallback(data models.CallbackData, url string) {
-	slog.Debug("Sending callback: %+v\n", data)
+	slog.Debug("Sending callback: %+v\n", slog.Any("callback", data))
 	_, err := makePostCall(data, url)
 
 	if err != nil {
-		slog.Warn("Failed to send callback: ", err)
+		slog.Warn("Failed to send callback: ", slog.Any("error", err))
 	}
 }

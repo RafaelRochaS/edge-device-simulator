@@ -53,7 +53,7 @@ func GetConfig() (config models.Config) {
 	seed, err := strconv.Atoi(os.Getenv("BASE_SEED"))
 
 	if err != nil {
-		slog.Error("Failed to parse BASE_SEED: ", err)
+		slog.Error("Failed to parse BASE_SEED: ", slog.Any("error", err))
 	}
 
 	config.BaseSeed = seed

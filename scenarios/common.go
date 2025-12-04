@@ -47,7 +47,7 @@ execution:
 
 			sleepTime := time.Duration(distExpo.Rand() * float64(time.Second))
 
-			slog.Info("Task running, sleeping for %v ...\n", sleepTime)
+			slog.Info("Task running, sleeping for ", slog.Duration("sleepTime", sleepTime))
 			time.Sleep(sleepTime)
 		}
 	}
@@ -74,7 +74,7 @@ func generateTask(config models.Config, distLogNormal distuv.LogNormal) *models.
 	task.CallbackUrl = config.Callback
 	task.Id = uuid.New().String()
 
-	slog.Debug("Generated task: ", task)
+	slog.Debug("Generated task: ", slog.Any("task", task))
 
 	return task
 }
@@ -88,12 +88,12 @@ func executeTask(config models.Config, distLogNormal distuv.LogNormal) {
 	n := int(distLogNormal.Rand())
 	callbackData.WorkloadSize = n
 
-	slog.Debug("Starting workload of size %d...\n", n)
+	slog.Debug("Starting workload of size", slog.Int("workload", n))
 
 	duration := utils.CpuBoundWork(n)
 	callbackData.Duration = duration.Seconds()
 
-	slog.Debug("Generated callback data: ", callbackData)
+	slog.Debug("Generated callback data: ", slog.Any("callbackData", callbackData))
 
 	utils.SendCallback(callbackData, config.Callback)
 }

@@ -15,11 +15,11 @@ import (
 )
 
 func getClusterClientSetConfig(path string) (*kubernetes.Clientset, error) {
-	slog.Debug("Loading kubeconfig from path: ", path)
+	slog.Debug("Loading kubeconfig from path: ", slog.String("path", path))
 	config, err := clientcmd.BuildConfigFromFlags("", path)
 
 	if err != nil {
-		slog.Error("Failed to build config: ", err)
+		slog.Error("Failed to build config: ", slog.Any("error", err))
 		return nil, err
 	}
 
@@ -27,11 +27,11 @@ func getClusterClientSetConfig(path string) (*kubernetes.Clientset, error) {
 }
 
 func OffloadTask(config models.Config, task models.Task) error {
-	slog.Debug("Offloading task: ", task.Id)
+	slog.Debug("Offloading task: ", slog.String("taskId", task.Id))
 	client, err := getClusterClientSetConfig(config.KubeconfigPath)
 
 	if err != nil {
-		slog.Error("Failed to get cluster client set config: ", err)
+		slog.Error("Failed to get cluster client set config: ", slog.Any("error", err))
 		return err
 	}
 
@@ -92,9 +92,9 @@ func OffloadTask(config models.Config, task models.Task) error {
 	_, err = jobsClient.Create(context.TODO(), job, metav1.CreateOptions{})
 
 	if err != nil {
-		slog.Error("Failed to offload task: ", err)
+		slog.Error("Failed to offload task: ", slog.Any("error", err))
 	} else {
-		slog.Info("Task offloaded: ", task.Id)
+		slog.Info("Task offloaded: ", slog.String("taskId", task.Id))
 	}
 
 	return err

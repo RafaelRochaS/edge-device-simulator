@@ -7,3 +7,7 @@ const (
 	Cloud
 	MEC
 )
+
+func (s Scenario) String() string {
+	return [...]string{"Local", "Cloud", "MEC"}[s]
+}

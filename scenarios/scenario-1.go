@@ -13,12 +13,12 @@ func ScenarioOne(config models.Config) {
 		func(input ScenarioInput) {
 			task := generateTask(input.config, input.DistLogNormal)
 
-			slog.Info("Creating task: ", task)
+			slog.Info("Creating task: ", slog.Any("task", task))
 
 			err := utils.OffloadTask(config, *task)
 
 			if err != nil {
-				slog.Error("Failed to offload task: ", err)
+				slog.Error("Failed to offload task: ", slog.Any("error", err))
 			}
 		})
 }
