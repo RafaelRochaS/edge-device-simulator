@@ -95,5 +95,5 @@ func executeTask(config models.Config, distLogNormal distuv.LogNormal) {
 
 	slog.Debug("Generated callback data: ", slog.Any("callbackData", callbackData))
 
-	utils.SendCallback(callbackData, config.Callback)
+	utils.SendCallback(callbackData, config.LocalCallback)
 }

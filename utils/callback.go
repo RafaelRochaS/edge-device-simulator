@@ -17,7 +17,7 @@ func GetCallbackData() models.CallbackData {
 }
 
 func SendCallback(data models.CallbackData, url string) {
-	slog.Debug("Sending callback: %+v\n", slog.Any("callback", data))
+	slog.Debug("Sending callback:", slog.Any("callback", data), slog.String("url", url))
 	_, err := makePostCall(data, url)
 
 	if err != nil {
