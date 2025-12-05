@@ -17,6 +17,7 @@ func GetConfig() (config models.Config) {
 	scenario := flag.Int("scenario", 2, "Scenario to run:\n0 - Local processing\n1 - Cloud processing\n2 - Hybrid edge with xApp")
 	lambda := flag.Float64("arrival-rate", 0.8, "Arrival rate of workloads in requests per second.")
 	callback := flag.String("callback", "http://localhost:8080", "Callback URL to send results to.")
+	localCallback := flag.String("local-callback", "http://localhost:8080", "Callback URL to send results to when running locally. If empty, uses the same as --callback.")
 	duration := flag.Duration("duration", time.Minute, "Duration of the simulation.")
 	loadMean := flag.Int("workload-mean", 15, "Mean of workload sizes.")
 	loadStdVar := flag.Int("workload-std-var", 2, "Standard deviation of workload sizes.")
@@ -47,6 +48,7 @@ func GetConfig() (config models.Config) {
 	config.MECOffloadThreshold = *offloadThreshold
 	config.MECHandlerAddr = *mecHandlerAddr
 	config.LogLevel = parseLogLevel(*logLevel)
+	config.LocalCallback = *localCallback
 
 	slog.SetLogLoggerLevel(config.LogLevel)
 

@@ -8,6 +8,7 @@ import (
 type Config struct {
 	Scenario            Scenario
 	Callback            string
+	LocalCallback       string
 	ArrivalRate         float64
 	Duration            time.Duration
 	WorkloadMean        int
@@ -27,6 +28,7 @@ func (c Config) LogValue() slog.Value {
 	return slog.GroupValue(
 		slog.String("scenario", c.Scenario.String()),
 		slog.String("callback", c.Callback),
+		slog.String("localCallback", c.LocalCallback),
 		slog.Float64("arrivalRate", c.ArrivalRate),
 		slog.Duration("duration", c.Duration),
 		slog.Int("workloadMean", c.WorkloadMean),
